@@ -1,2 +1,5 @@
-# Easy-Pay
-A mini project made with raw Python to manage salary payment
+# Mini projet Easy-Pay
+## Description:
+Logiciel simple de gestion de paiement des employés d'une entreprise.
+## Technologies:
+Python + SQLite.
