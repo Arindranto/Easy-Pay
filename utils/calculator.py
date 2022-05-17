@@ -1,7 +1,6 @@
 # -*- coding: Utf-8 -*-
 # Basic calculations
 from utils.date_module import dateDiff
-from utils.converter import toNDigits
 
 ###############################################################################################################################################################
 def isPositive(nbr: float):

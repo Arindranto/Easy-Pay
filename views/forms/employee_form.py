@@ -6,11 +6,9 @@ from tkinter import messagebox, simpledialog, ttk, filedialog
 # Models
 from models.database_basics import connect, selectFrom, insertInto, update
 from models.db_info import CORRESP
-from models.database import getInfoById, getFunctions, askPass, insertEmployee
+from models.database import getFunctions, getInfoById, insertEmployee
 # Utils
-from utils.crypto import crypt
-from utils.date_module import dateDiff, today, fullDate, LONG_M, firstDayOfMonth
-from utils.calculator import salaryCalc
+from utils.date_module import LONG_M, today
 # Views
 from views.form_module import centralize, Form, Input, borderColor, DateEntry, MASKS
 
@@ -160,7 +158,10 @@ class EmployeeForm(tk.Toplevel):
             "To enter the function combobox"
             self.funCombo.focus_set()
             return
+
+        # Bindings
         self.bio.iList['Téléphone'].bind('<Return>', enter) # Link the last input in the first form to the first input of the second form
+        self.contract.iList['Salaire mensuel'].bind('<Return>', self.add)
         self.funCombo.bind('<<ComboboxSelected>>', self.generateMatricule) # Generate a matricule for the current person
         self.funCombo.bind('<KeyRelease>', self.generateMatricule) # Generate a matricule for the current person
         self.funCombo.bind('<Return>', self.contract.iList['Horaire hebdomadaire'].enter) # Enter next input
@@ -251,6 +252,7 @@ class EmployeeForm(tk.Toplevel):
             else:   # Change the button works
                 self.contract.bList['Vider'].config(text= 'Licencier', bg= 'red', fg= 'white', command= self.fire)
                 self.contract.bList['Enregistrer'].config(text= 'Modifier', command= self.update)
+                self.contract.iList['Salaire mensuel'].bind('<Return>', self.update)
             # Cut the current variable to the necessary ones [0: idPers, 1: pLast, 2: pFirst, 3: pAdr, 4: pEmail, 5: pPhone, 6: actualSal, 7: cEnd, 8: quota, 9: imgPath]
             self.current= self.current[0:3]+self.current[5:8]+self.current[12:15] + (self.current[16],)
         # On window closing action
@@ -313,7 +315,7 @@ class EmployeeForm(tk.Toplevel):
             con.close()
         return
     #######################################################################################################################################################################
-    def add(self):
+    def add(self, event= None):
         "Add the values to the database"
         isSet= self.bio.verify() * self.contract.verify()   # Verify the 2 forms first
         # Test of the funCombo if it's blank
@@ -466,7 +468,7 @@ class EmployeeForm(tk.Toplevel):
         cur.close()
         con.close()
     #########################################################################################################################################################################
-    def update(self):   
+    def update(self, event= None):   
         "To update an already existing person"
         # First check if the input are valid
         isSet= self.bio.verify() * self.contract.verify()

@@ -1,7 +1,7 @@
 # -*- coding: Utf-8 -*-
 # Module that contain the thread used in app
 import threading as th
-from multiprocessing import Process, Pipe
+from multiprocessing import Process
 from models.database_basics import connect
 
 class QueryThread(th.Thread):

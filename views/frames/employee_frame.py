@@ -3,7 +3,6 @@
 import tkinter as tk
 from tkinter import ttk
 # Models
-from models.database_basics import connect
 from models.database import getFunctions, getIdByMatricule, isActive
 # Utilities
 from utils.converter import toNDigits

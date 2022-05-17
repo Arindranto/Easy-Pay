@@ -3,7 +3,6 @@
 import tkinter as tk
 from tkinter import ttk
 # Model
-from models.database_basics import connect
 from models.database import getSalaryId
 # Utilities
 from utils.calculator import isPositive

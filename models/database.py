@@ -3,7 +3,6 @@
 #import sqlite3 as sql
 from tkinter import messagebox
 from models.database_basics import connect, selectFrom, insertInto
-from utils.date_module import dateToInt
 
 ###################################################################################################################
 def isActive(empId):

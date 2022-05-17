@@ -1,16 +1,12 @@
 # -*- coding: Utf-8 -*-
 # The payment form
 import tkinter as tk
-from shutil import copyfile
 from PIL import ImageTk, Image
-from tkinter import messagebox, simpledialog, ttk, filedialog
+from tkinter import messagebox, simpledialog
 # Models
-from models.database_basics import connect, selectFrom, insertInto, update
-from models.db_info import CORRESP
-from models.database import getInfoById, getFunctions, askPass, insertEmployee
+from models.database_basics import connect, insertInto, selectFrom
 # Utils
-from utils.crypto import crypt
-from utils.date_module import dateDiff, today, fullDate, LONG_M, firstDayOfMonth
+from utils.date_module import dateDiff, firstDayOfMonth, fullDate, today
 from utils.calculator import salaryCalc
 # Views
 from views.form_module import centralize, Form, Input, borderColor, DateEntry, MASKS

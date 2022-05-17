@@ -5,7 +5,7 @@ from tkinter import messagebox
 # Models
 from models.database_basics import connect, selectFrom, update
 # Utilities
-from utils.crypto import crypt, decrypt
+from utils.crypto import crypt
 # View
 from views.form_module import Form, centralize, borderColor
 

@@ -14,7 +14,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 # Models
-from models.database_basics import connect, create, selectFrom
+from models.database_basics import connect, selectFrom
 # Utilities
 import utils.app_state as app
 # Views
