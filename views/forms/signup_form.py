@@ -3,7 +3,7 @@
 import tkinter as tk
 from tkinter import messagebox
 # Models
-from models.database_basics import connect
+from models.database_basics import connect, insertInto
 # Utilities
 from utils.crypto import crypt
 # View
@@ -135,24 +135,21 @@ class SignUp(MonoTL):
                 # Db connection
                 con, cur= connect()
                 # fUser values (company informations)
-                cur.execute('''INSERT INTO Companies(uName, cName, cAdr, pass) VALUES('%s', '%s', '%s', '%s')'''
-                            %(etp,  # Username
-                              self.fUser.iList['Nom'].get().title(),
-                              self.fUser.iList['Adresse'].get().title(),
-                              pw # Password
-                              )
+                insertInto(cur, 'Companies', ('uName', 'cName', 'cAdr', 'pass',),
+                            (etp, self.fUser.iList['Nom'].get().title(), self.fUser.iList['Adresse'].get().title(), pw)
                             )
                 # fBio values
-                cur.execute('''INSERT INTO Persons(idPers, pLast, pFirst, pAdr, pEmail, pPhone, Fun) VALUES (%d, '%s', '%s', '%s', '%s', '%s', %d)'''
-                            %(0, self.fBio.iList['Nom'].get().title(),
+                insertInto(cur, 'Persons', ('idPers', 'pLast', 'pFirst', 'pAdr', 'pEmail', 'pPhone', 'Fun',),
+                            (
+                              0,
+                              self.fBio.iList['Nom'].get().title(),
                               self.fBio.iList['Prénom'].get().title(),
                               self.fBio.iList['Adresse'].get().title(),
-                              self.fBio.iList['Email'].get(),# We can't lower emails
+                              self.fBio.iList['Email'].get(),   # We can't lower emails
                               self.fBio.iList['Téléphone'].get(),
-                              0 # Adminisatrator function id
-                             )
+                              0 # __Admin__ function)
                             )
-                
+                            )
                 con.commit()    # Commitment
                 # Db close
                 cur.close()

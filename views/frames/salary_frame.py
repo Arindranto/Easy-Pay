@@ -4,13 +4,14 @@ import tkinter as tk
 from tkinter import ttk
 # Model
 from models.database_basics import connect
+from models.database import getSalaryId
 # Utilities
 from utils.calculator import isPositive
 from utils.date_module import dateDiff, fullDate, today, dateToInt, firstDayOfMonth
 from utils.thread_module import QueryThread
 # Views
 from views.form_module import TreeScroll, DateEntry
-from views.forms.employee_form import PayForm
+from views.forms.payment_form import PayForm
 
 
 ####################################################################################################################################################
@@ -122,21 +123,15 @@ class SalaryFrame(tk.Frame):
     ###############################################################################################################################################
     def payDetail(self, event= None):
         "The payment detail"
-        con, cur= connect()
         try:    # Try to get the information about the payment if one is selected
             period= self.salTree.tree.item(self.salTree.tree.focus(), 'values')[1]   # Save the period that is in the second column
             period= period.split(' au ')    # Split it to get the 2 dates
-            salId= cur.execute('''SELECT idPers, idSal FROM Persons JOIN Functions ON Fun = idFun JOIN Salaries ON Emp = idPers WHERE
-                                  bDate = %d AND eDate = %d AND fPrefix || "-" || num = "%s"'''
-                                %(dateToInt(period[0]), dateToInt(period[1]),
-                                self.salTree.tree.item(self.salTree.tree.focus(), 'values')[0])
-                               ).fetchone()  # Get the emp id
+            matricule= self.salTree.tree.item(self.salTree.tree.focus(), 'values')[0]
+            salId= getSalaryId(dateToInt(period[0]), dateToInt(period[1]), matricule)    # Get empId and salId at once
             # Showing the employee card
             PayForm(self, emp= salId[0], sal= salId[1])
         except:
             ...
-        cur.close()
-        con.close()
         self.mainloop() # Retake the main loop
         return
     ###################################################################################################################################################

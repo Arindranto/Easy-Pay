@@ -43,7 +43,7 @@ def insertInto(cursor, tableName, fields= None, datas= None):
         query= 'INSERT INTO ' + tableName
         if fields: # If specified field
             query= query + '(' + ', '.join([field for field in fields]) + ')'
-        query= query + 'VALUES '
+        query= query + ' VALUES '
         # Datas are replaced by ? to avoid SQL injection
         query= query + '(' + ', '.join(['?' for data in datas]) + ');'
         #print(query)
@@ -64,12 +64,18 @@ def selectFrom(cursor, tableNames, fields= None, conditions= ()):
             query= 'SELECT * '
 
         # Please notice that for joins, you must enter the join manually here in tableNames parameter
-        query= query + ' FROM ' + tableNames
+        query+= ' FROM ' + tableNames
         # Conditions
         if conditions:
+            query+= ' WHERE '
+        for condition in conditions:
             # conditions example includes (['something = ', value1, 'OR'], ['other thing <=', value2, 'AND'])
             #filler= filler + [condition[1] for condition in conditions]
-            query= query + ' WHERE ' + ' '.join([condition[0] + ' ? ' + condition[2] for condition in conditions])
+            if len(condition) == 3: # Normal operator
+                query+= condition[0] + ' ? ' + condition[2] + ' '
+            elif len(condition) == 4: # Between ie: (['begin', 'value', 'end', 'logic operator'])
+                # Careful to always place the condition in position 1
+                query+= ' ? BETWEEN ' + condition[0] + ' AND ' + condition[2] + ' ' + condition[3] + ' '
         query= query + ';'
         #print(query)
 
@@ -210,7 +216,7 @@ def connect():
         # Verify if the database is already actually filled
         cur.execute('''SELECT * FROM Functions''')
     except:
-        #try:
+        try:
             #print('Must recreate the database')
             create()    # Recreate the database
             #print('Database created')
@@ -219,7 +225,7 @@ def connect():
             cur= con.cursor()
             
             app_state.create(db= '''db\management.db''', appstate= 1)   # Reset the database path in the app_state module
-        #except:
+        except:
             ...
     return con, cur # Return the connection and the cursor
     

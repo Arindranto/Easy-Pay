@@ -1,7 +1,19 @@
 # -*- coding: Utf-8 -*-
 # The payment form
 import tkinter as tk
-from tkinter import messagebox
+from shutil import copyfile
+from PIL import ImageTk, Image
+from tkinter import messagebox, simpledialog, ttk, filedialog
+# Models
+from models.database_basics import connect, selectFrom, insertInto, update
+from models.db_info import CORRESP
+from models.database import getInfoById, getFunctions, askPass, insertEmployee
+# Utils
+from utils.crypto import crypt
+from utils.date_module import dateDiff, today, fullDate, LONG_M, firstDayOfMonth
+from utils.calculator import salaryCalc
+# Views
+from views.form_module import centralize, Form, Input, borderColor, DateEntry, MASKS
 
 class PayForm(tk.Toplevel):
     def __init__(self, boss, emp, sal= None):
@@ -21,9 +33,10 @@ class PayForm(tk.Toplevel):
         # Database connection to get the person information
         con, cur= connect()
         # self.pers[Lastname and Firstname, function name, matricule, actual salary, quota, image]
-        self.pers= cur.execute('''SELECT pLast || '\n' || pFirst, fName, fPrefix || "-" || num, actualSal, quota, imgPath 
-                                  FROM Functions JOIN Persons ON idFun = Fun
-                                  WHERE idPers = %d''' %(emp)).fetchone()
+        selectFrom(cur, 'Functions JOIN Persons ON idFun = Fun',
+                   ('pLast || "\n" || pFirst', 'fName', 'fPrefix || "-" || num', 'actualSal', 'quota', 'imgPath',),
+                   (['idPers = ', emp, ''],))
+        self.pers= cur.fetchone()
         # Close the connection after querying it
         cur.close()
         con.close()
@@ -95,7 +108,8 @@ class PayForm(tk.Toplevel):
         if sal != None:
             con, cur= connect()
             # Getting the salary details    [beginning date, ending date, payment date, worked hours, deduction, majoration, payment label]
-            salaryDetail= cur.execute('''SELECT bDate, eDate, pDate, sAmount, wHour, fisc, maj, lib FROM Salaries WHERE idSal= %d''' %(sal)).fetchone()
+            selectFrom(cur, 'Salaries', ('bDate', 'eDate', 'pDate', 'sAmount', 'wHour', 'fisc', 'maj', 'lib',), (['idSal = ', sal, ''],))
+            salaryDetail= cur.fetchone()
             # Close the db after querying the informations
             cur.close()
             con.close()
@@ -155,12 +169,11 @@ class PayForm(tk.Toplevel):
         if isSet:
             # Database verification if the salary is already paid
             con, cur= connect()
-            date_interval= cur.execute('''SELECT bDate, eDate FROM Salaries WHERE
-                                          Emp = {2} AND ({0} BETWEEN bDate AND eDate OR {1} BETWEEN bDate AND eDate)'''.format(
-                                                                                                                              self.form.iList['du:'].getDate(),
-                                                                                                                              self.form.iList['au:'].getDate(),
-                                                                                                                              self.pers[2])
-                                      ).fetchone()
+            selectFrom(cur, 'Salaries', ('bDate', 'eDate',),
+                        (['Emp = ', self.pers[2], 'AND ('],
+                        ['bDate', self.form.iList['du:'].getDate(), 'eDate', 'OR'],
+                        ['bDate', self.form.iList['au:'].getDate(), 'eDate', ')']))
+            date_interval= cur.fetchone()
             # Close the connection
             cur.close()
             con.close()
@@ -203,22 +216,22 @@ class PayForm(tk.Toplevel):
                 # Get current date in int format
                 date_diff= today()
                 # Query cast
-                req= '''INSERT INTO Salaries(bDate, eDate, pDate, sAmount, Emp, wHour, fisc, lib, maj)
-                        VALUES (%d, %d, %d, %f, %d, %f, %f, "%s", %f)'''%(
-                                                                           self.form.iList['du:'].getDate(),
-                                                                           self.form.iList['au:'].getDate(),
-                                                                           date_diff,
-                                                                           self.pers[0],
-                                                                           self.pers[2],
-                                                                           float(self.form.iList['wHour'].get()),
-                                                                           float(self.form.iList['deduction'].get()),
-                                                                           self.form.iList['lib'].get(),
-                                                                           float(maj)
-                                                                           )
-                cur.execute(req) # Query execution
+                insertInto(cur, 'Salaries',
+                           ('bDate', 'eDate', 'pDate', 'sAmount', 'Emp', 'wHour', 'fisc', 'lib', 'maj'),
+                           (self.form.iList['du:'].getDate(),
+                            self.form.iList['au:'].getDate(),
+                            date_diff,
+                            self.pers[0],
+                            self.pers[2],
+                            float(self.form.iList['wHour'].get()),
+                            float(self.form.iList['deduction'].get()),
+                            self.form.iList['lib'].get(),
+                            float(maj))
+                           )
                 self.withdraw() # Withdraw the window before confirmation
                 if messagebox.askyesno('Easy Pay', 'Payer la somme de %.2f?' %(salary)): # Confirm before committing it to the database
                     con.commit()
+                    #print('committed')
                     try:
                         self.master.master.master.master.frames[1].update()  # Update the salary frame if the app is included in a MainApp object
                     except:

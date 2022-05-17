@@ -3,7 +3,7 @@
 import tkinter as tk
 from tkinter import messagebox
 # Models
-from models.database_basics import connect
+from models.database_basics import connect, selectFrom
 # Utilities
 from utils.crypto import crypt  # To decrypt the datas in the database
 # Views
@@ -81,8 +81,8 @@ class Login(MonoTL):
             # Database connection
             conn, cur= connect()
             # Querying the database
-            req = "SELECT uName FROM Companies WHERE uName= '%s'  AND pass= '%s'" %(user, pw)
-            rowCount = len(cur.execute(req).fetchall())
+            selectFrom(cur, 'Companies', ('uName',), (['uName = ', user, 'AND'], ['pass = ', pw, ''],))
+            rowCount = len(cur.fetchall())
             if (rowCount == 0): # If the user or the password is wrong
                 messagebox.showerror('Erreur', 'Le pseudo ou le mot de passe est erroné')
                 # Erase the datas on the inputs

@@ -4,14 +4,15 @@ import tkinter as tk
 from tkinter import ttk
 # Models
 from models.database_basics import connect
-from models.database import getFunctions
+from models.database import getFunctions, getIdByMatricule, isActive
 # Utilities
 from utils.converter import toNDigits
 from utils.date_module import today
 from utils.thread_module import QueryThread
 # Views
 from views.form_module import TreeScroll
-from views.forms.employee_form import EmployeeForm, PayForm, CORRESP
+from views.forms.employee_form import EmployeeForm, CORRESP
+from views.forms.payment_form import PayForm
 
 ###############################################################################################################################################################################
 class EmployeeFrame(tk.Frame):
@@ -165,41 +166,28 @@ class EmployeeFrame(tk.Frame):
     ####################################################################################################################################################################
     def pay(self, event= None):
         "The payment section"
-        con, cur= connect()
         try: # If a person is selected
             # We check by matricule
-            matricule= self.empTree.tree.item(self.empTree.tree.focus(), 'values')[0].split('-')
-            empId= cur.execute('''SELECT idPers FROM Persons JOIN Functions ON Fun = idFun WHERE fPrefix = "%s" AND num = %d AND isInactive = 0'''
-                               %(matricule[0],
-                                 int(matricule[1]),
-                                )
-                               ).fetchone()[0]  # Get the emp id
-            # Showing the employee pay form
-            PayForm(self, emp= empId)
+            matricule= self.empTree.tree.item(self.empTree.tree.focus(), 'values')[0]   # First column of the treeview
+            empId= getIdByMatricule(matricule)
+            if isActive(empId):
+                # Showing the employee pay form
+                PayForm(self, emp= empId)
         except: # else pass
             ...
-        # Close the db properly
-        cur.close()
-        con.close()
         
         self.mainloop() # Retake the mainloop
         return
     ####################################################################################################################################################################
     def edit(self, event= None):
         "View employee information and potentially editing employee information"
-        con, cur= connect()
         try:    # If one is selcted in the treeview
-            empId= cur.execute('''SELECT idPers FROM Persons WHERE Fun= %d AND num = %d'''
-                               %(cur.execute('''SELECT idFun FROM Functions WHERE fName = "%s"'''
-                               %(self.empTree.tree.item(self.empTree.tree.focus(), 'values')[3])).fetchone()[0],
-                               int(self.empTree.tree.item(self.empTree.tree.focus(), 'values')[0].split('-')[1]))
-                              ).fetchone()[0]
+            # We check by matricule
+            matricule= self.empTree.tree.item(self.empTree.tree.focus(), 'values')[0]   # First column of the treeview
+            empId= getIdByMatricule(matricule)
             EmployeeForm(self, emp= empId)
         except:
             ...
-        # Close the database properly
-        cur.close()
-        con.close()
         
         self.mainloop() # Retake the mainloop
         return

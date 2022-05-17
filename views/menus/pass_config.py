@@ -3,7 +3,7 @@
 import tkinter as tk
 from tkinter import messagebox
 # Models
-from models.database_basics import connect
+from models.database_basics import connect, selectFrom, update
 # Utilities
 from utils.crypto import crypt, decrypt
 # View
@@ -99,8 +99,7 @@ class PassConfig(tk.Toplevel):
 		# Database connection
 		conn, cur= connect()
 		# Querying the database
-		req = "SELECT pass, uName FROM Companies WHERE idCom= 1"
-		cur.execute(req)
+		selectFrom(cur, 'Companies', ('pass', 'uName',), (['idCom = ', 1, ''],))
 		req= cur.fetchone()	# Get the value as a tuple
 		#print(decrypt(req[0]), ' ', decrypt(req[1]))
 		cur.close()
@@ -128,7 +127,7 @@ class PassConfig(tk.Toplevel):
 			return 'Vous avez entré deux valeurs différentes'
 		return 'valid'
 	######################################################################################################################################################################################
-	def set(self):
+	def set(self, command= None):
 		"Set the new password if it's validated successfully"
 		msg= self.checkPasses()
 		if (msg == 'valid'):
@@ -139,7 +138,7 @@ class PassConfig(tk.Toplevel):
 			conn, cur= connect()
 
 			# Changes
-			cur.execute('''UPDATE Companies SET pass=(?) WHERE idCom= 1''', (newpass,))
+			update(cur, 'Companies', (['pass', newpass],), (['idCom = ', 1, ''],))
 
 			# Ask before committing
 			if messagebox.askyesno('Easy pay', 'Modifier le mot de passe?'):

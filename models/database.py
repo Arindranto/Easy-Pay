@@ -3,7 +3,18 @@
 #import sqlite3 as sql
 from tkinter import messagebox
 from models.database_basics import connect, selectFrom, insertInto
+from utils.date_module import dateToInt
 
+###################################################################################################################
+def isActive(empId):
+	"Return true if the person is active, else false"
+	con, cur= connect()
+	selectFrom(cur, 'Persons', ('isInactive',), (['idPers = ', empId, ''],))
+	result= cur.fetchone()[0] == 0	# isInactive == 0 => isActive = true
+	cur.close()
+	con.close()
+	return result
+##############################################################################################################################
 def getInfoById(empId):
 	infos= ('idPers', 'pLast', 'pFirst', 'pSex', 'pBDate', 'pAdr', 'pEmail', 'pPhone', 'fName', 'fPrefix', 'num', 'cStart', 'actualSal', 'cEnd', 'quota', 'isInactive', 'imgPath')
 	con, cur= connect()
@@ -12,6 +23,27 @@ def getInfoById(empId):
 	cur.close()
 	con.close()
 	return result
+#############################################################################################################################
+def getIdByMatricule(matricule):
+	"Get the id according to the matricule"
+	con, cur= connect()
+	matricule= matricule.split('-')	# Split it into two parts
+	selectFrom(cur, 'Persons JOIN Functions ON Fun = idFun', ('idPers',),
+	(['fPrefix =', matricule[0], '	AND'], ['num = ', matricule[1], ''],))
+	empId= cur.fetchone()[0]  # Get the emp id
+	cur.close()
+	con.close()
+	return empId
+############################################################################################################################
+def getSalaryId(bDate, eDate, matricule):
+	"Get the employe and salary id"
+	empId= getIdByMatricule(matricule)
+	con, cur= connect()
+	selectFrom(cur, 'Salaries', ('idSal',), (['bDate = ', bDate, 'AND'], ['eDate = ', eDate, 'AND'], ['Emp = ', empId, '']))
+	salId= cur.fetchone()[0]
+	cur.close()
+	con.close()
+	return empId, salId
 ############################################################################################
 def getFunctions():
     "Select all the functions"
@@ -59,6 +91,3 @@ def insertEmployee(pLast, pFirst, pSex, pBDate, pAdr, pEmail, pPhone, cStart, Fu
 	insertInto(cur, 'Persons', fields, datas)
 	return con 	# Return for confirmation or other
 ###########################################################################################################################
-def updateEmployee(idPers, pLast, pFirst, pAdr, pEmail, pPhone, actualSal, cEnd, quota, imgPath):
-	"Updating an Employee"
-	message= ''	# To return, the comparison between the 2 states
