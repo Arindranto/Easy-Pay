@@ -66,9 +66,3 @@ def normalize(txt):
     return txt'''
 
 ###############################################################################################################################################################
-if __name__ == '__main__':
-    word= input('Enter the text to encrypt: ')
-    crypted= crypt(word)
-    print('Crypted: ', crypted)
-    print('Decrypted: ', decrypt(crypted))
-    print('Normalized: ', normalize(word))

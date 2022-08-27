@@ -154,8 +154,3 @@ class PassConfig(tk.Toplevel):
 		else:
 			# Set error message
 			self.errMess.config(text= msg)
-
-if __name__ == '__main__':
-	fen= tk.Tk()	# Main window
-	PassConfig(fen)
-	fen.mainloop()

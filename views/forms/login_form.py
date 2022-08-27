@@ -101,8 +101,3 @@ class Login(MonoTL):
         "Delete the error message and recolor the Inputs border"
         self.errMess.set('')    # errMess reseting
 ##########################################################################################################################################################################
-# To test the login form
-if __name__ == '__main__':
-    base= tk.Tk()
-    Login(base)
-    base.mainloop()

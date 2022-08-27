@@ -564,7 +564,3 @@ class EmployeeForm(tk.Toplevel):
                 con.close()
             self.bio.iList['Nom'].enter()   # Enter the first input again
 #########################################################################################################################################################
-if __name__ == '__main__':
-    fen= tk.Tk()
-    EmployeeForm(fen)
-    fen.mainloop()

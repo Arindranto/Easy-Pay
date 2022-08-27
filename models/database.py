@@ -1,8 +1,9 @@
 # -*- coding: Utf-8 -*-
 # Database class to easily manipulate the models
 #import sqlite3 as sql
-from tkinter import messagebox
+from tkinter import messagebox, simpledialog
 from models.database_basics import connect, selectFrom, insertInto
+from utils.crypto import crypt
 
 ###################################################################################################################
 def isActive(empId):

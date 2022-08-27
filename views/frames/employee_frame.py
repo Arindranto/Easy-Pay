@@ -48,8 +48,8 @@ class EmployeeFrame(tk.Frame):
             funChoice.config(values= ['Tout'] + getFunctions())
             return
         def menu():
-        	"Show the menu for a selected Item"
-        	print('Here we go')
+            "Show the menu for a selected Item"
+            print('Here we go')
         # Variables for the query
         self.order= [tk.StringVar(), tk.StringVar(), tk.StringVar(), tk.StringVar()]    # [Function, Sorting options, Searchbar value, Sorting order]
         # Default values
@@ -276,7 +276,3 @@ class EmployeeFrame(tk.Frame):
             ...
         self.after(100, self.setCounter)    # else check again after 100 ms
     ####################################################################################################################################################################
-if __name__ == '__main__':
-    fen= tk.Tk()
-    EmployeeFrame(fen).pack()
-    fen.mainloop()

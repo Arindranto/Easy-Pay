@@ -2,7 +2,7 @@
 # Basic classes and functions to make Forms
 import tkinter as tk    # User interface
 import re   # For regexes
-from tkinter import ttk     # For additional user interfaces
+from tkinter import ttk, messagebox     # For additional user interfaces
 from utils.converter import toNDigits
 from utils.app_state import read, create  # app state checking
 from utils.date_module import *   # Implemented date module
@@ -384,8 +384,3 @@ class MonoTL(tk.Toplevel):
             self.master.destroy()
         return
 ##########################################################################################################################################################################################################
-if __name__ == '__main__':
-    fen= tk.Tk()
-    if askyesno(fen):
-        fen.destroy()
-    fen.mainloop()

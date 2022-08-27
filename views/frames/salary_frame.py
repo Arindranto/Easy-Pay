@@ -206,7 +206,3 @@ class SalaryFrame(tk.Frame):
             ...
         self.after(100, self.setCounter) # else check again after 100 ms
     ################################################################################################################################################################
-if __name__ == '__main__':
-    fen= tk.Tk()
-    SalaryFrame(fen).pack()
-    fen.mainloop()
