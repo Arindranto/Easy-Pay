@@ -1,7 +1,8 @@
-# Mini projet Easy-Pay
+# Easy Pay Project (lang.: French)
 ## Description:
-Logiciel simple de gestion de paiement des employés d'une entreprise.
+Simple software to manage employees especially about salary payments.
 ## Technologies:
-Python 3.8 + SQLite 3.
-## Required libraries:
-Pillow (Image treatment)
+Python (v. 3.8) + SQLite 3.
+## Required library:
+Pillow (Image Processing)
+
