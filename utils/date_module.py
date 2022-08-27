@@ -60,12 +60,12 @@ def dateDiff(bDate, eDate, limit= 28):
 
 ###############################################################################################################################################################    
 def today():
-    "Return today's date in int format"
+    "Return today's date in int format YYYYMMDD"
     return int(str(datetime.now()).split('-')[0] + str(datetime.now()).split('-')[1] + str(datetime.now()).split('-')[2].split()[0])
 
 ###############################################################################################################################################################    
 def fullDate(date, style= 1):
-    "Return full date from an integer given date in dd-mm-yyyy format"
+    "Return full date from an integer YYYYMMDD given date in dd-mm-yyyy format"
     # If style is 1, it's full date (dd MonthName yyyy)
     if style == 1:
         return str(date % 100) + " " + LONG_M[date % 10000 // 100 - 1] + " " + str(date // 10000)
@@ -74,7 +74,7 @@ def fullDate(date, style= 1):
 
 ###############################################################################################################################################################
 def dateToInt(date):
-    "Return the integer format of a given dd-mm-yyyy date"
+    "Return the integer format YYYYMMDD of a given dd-mm-yyyy date"
     return int(date.split('-')[2] + toNDigits(int(date.split('-')[1]), 2) + toNDigits(int(date.split('-')[0]), 2))
 
 ###############################################################################################################################################################
