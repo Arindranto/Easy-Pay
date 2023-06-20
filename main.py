@@ -30,7 +30,7 @@ class MainApp(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)    # Instanciation
         
-        self.withdraw() # Hide it at first
+        # self.withdraw() # Hide it at first
         self.state= app.read() # (Database path and OpenWindowCount)
         # print(self.state)
         if not self.state[1]:   # If there is no open window
@@ -102,10 +102,10 @@ class MainApp(tk.Tk):
             
             app.create(db= self.state[0], appstate= 1)   # Change the open window count
             
-            if uCount == 1: # If only one username is recognized, signup form is showed
-                SignUp(self)
-            else:   # Else login form
-                Login(self)
+            # if uCount == 1: # If only one username is recognized, signup form is showed
+            #     SignUp(self)
+            # else:   # Else login form
+            #     Login(self)
             try:
                 self.deiconify()    # Deiconify if the user was authenticated
                 # Ask before closing the app

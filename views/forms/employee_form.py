@@ -426,7 +426,7 @@ class EmployeeForm(tk.Toplevel):
                         self.bio.iList['Téléphone'].get(),
                         self.contract.iList['Contract start'].getDate(),
                         idFun[0],
-                        int(self.matr.get().split('-')[1]),
+                        int(self.matr.get().split('-')[-1]),
                         float(self.contract.iList['Horaire hebdomadaire'].get()),
                         float(self.contract.iList['Salaire mensuel'].get()),
                         self.img,

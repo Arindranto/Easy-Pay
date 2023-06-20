@@ -180,13 +180,13 @@ class EmployeeFrame(tk.Frame):
     ####################################################################################################################################################################
     def edit(self, event= None):
         "View employee information and potentially editing employee information"
-        try:    # If one is selcted in the treeview
+        # try:    # If one is selcted in the treeview
             # We check by matricule
-            matricule= self.empTree.tree.item(self.empTree.tree.focus(), 'values')[0]   # First column of the treeview
-            empId= getIdByMatricule(matricule)
-            EmployeeForm(self, emp= empId)
-        except:
-            ...
+        matricule= self.empTree.tree.item(self.empTree.tree.focus(), 'values')[0]   # First column of the treeview
+        empId= getIdByMatricule(matricule)
+        EmployeeForm(self, emp= empId)
+        # except:
+        #     ...
         
         self.mainloop() # Retake the mainloop
         return

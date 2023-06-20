@@ -29,7 +29,7 @@ def getIdByMatricule(matricule):
 	con, cur= connect()
 	matricule= matricule.split('-')	# Split it into two parts
 	selectFrom(cur, 'Persons JOIN Functions ON Fun = idFun', ('idPers',),
-	(['fPrefix =', matricule[0], '	AND'], ['num = ', matricule[1], ''],))
+	(['fPrefix =', '-'.join(matricule[0:-1]), '	AND'], ['num = ', matricule[-1], ''],))
 	empId= cur.fetchone()[0]  # Get the emp id
 	cur.close()
 	con.close()

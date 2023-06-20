@@ -3,6 +3,7 @@
 # Define the app menu to allow user to control the options and get some help on how to use the app
 import tkinter as tk
 from views.menus.pass_config import PassConfig
+from views.menus.about import About
 
 ##############################################################################################################################################################################
 class MenuFrame(tk.Frame):
@@ -11,9 +12,9 @@ class MenuFrame(tk.Frame):
         tk.Frame.__init__(self, boss, **kwargs)
         # oMenu= tk.Menubutton(self, text= 'Options', font= 'Arial 9', highlightthickness= 1, highlightbackground= '#aaaaaa', height= 1)   # Option menu
         # hMenu= tk.Menubutton(self, text= 'Aide', font= 'Arial 9', highlightthickness= 1, highlightbackground= '#aaaaaa', height= 1) # Help menu 
-        
+        mainApp = self.master.master
         oMenu= tk.Menubutton(self, text= 'Options', relief= tk.RIDGE, font= 'Arial 9')   # Option menu
-        hMenu= tk.Menubutton(self, text= 'Aide', relief= tk.RIDGE, font= 'Arial 9', state= 'disabled') # Help menu
+        hMenu= tk.Menubutton(self, text= 'Aide', relief= tk.RIDGE, font= 'Arial 9') # Help menu
 
         # Option menu consists of:
             # Change password
@@ -41,9 +42,9 @@ class MenuFrame(tk.Frame):
         
         def update_empTree():
             "To update the empTree in self.master"
-            self.master.master.show_active.set(self.show_active.get()) # The show_all parameter is set to 1 if we need the active employees
-            self.master.master.show_inactive.set(self.show_inactive.get()) # The show_all parameter is set to 1 if we need the inactive employees
-            self.master.master.refresh() # Update the trees of the MainApp object
+            mainApp.show_active.set(self.show_active.get()) # The show_all parameter is set to 1 if we need the active employees
+            mainApp.show_inactive.set(self.show_inactive.get()) # The show_all parameter is set to 1 if we need the inactive employees
+            mainApp.refresh() # Update the trees of the MainApp object
         
         # Which employee to show or not
         self.show_inactive= tk.IntVar()
@@ -58,15 +59,21 @@ class MenuFrame(tk.Frame):
         show_menu.add_checkbutton(label= 'Salariés inactifs', command= update_empTree, variable= self.show_inactive)
         
         m1.add_cascade(label= 'Afficher', menu= show_menu)  # Show or hiding employees option
-        m1.add_command(label= 'Modifier le mot de passe', command= lambda arg= self.master.master.master: PassConfig(arg))   # Password changing option
+        m1.add_command(label= 'Modifier le mot de passe', command= lambda arg= mainApp: PassConfig(arg))   # Password changing option
         
         m1.add_separator()
         
-        m1.add_command(label= 'Quitter', command= self.master.master.ask_destroy)  # Quitter la fenetre principal
+        m1.add_command(label= 'Quitter', command= mainApp.ask_destroy)  # Quitter la fenetre principal
         oMenu.config(menu= m1)
         
         # Help menu consists of:
             # Using tips
+        m2= tk.Menu(hMenu, tearoff= 0)
+
+        m2.add_command(label= 'Documentation', state= 'disabled')
+        m2.add_command(label= 'A propos...', command= lambda: About())
+
+        hMenu.config(menu= m2)
             # About the developper
         # def say_hi():
             # print('Hi')
