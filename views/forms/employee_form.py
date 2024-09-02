@@ -271,11 +271,11 @@ class EmployeeForm(tk.Toplevel):
     def setEmpPhoto(self, path= 'photos/default.jpg'):
         "Setting the photo of the employee"
         try:
-            img= ImageTk.PhotoImage(Image.open(path).resize((70, 80), Image.ANTIALIAS))  # Try to open an image
+            img= ImageTk.PhotoImage(Image.open(path).resize((70, 80), Image.LANCZOS))  # Try to open an image
             self.img= path # set path
         except:
             self.img= 'photos/default.jpg'
-            img= ImageTk.PhotoImage(Image.open(self.img).resize((70, 80), Image.ANTIALIAS))   # Enter the default one
+            img= ImageTk.PhotoImage(Image.open(self.img).resize((70, 80), Image.LANCZOS))   # Enter the default one
         # Place the image
         self.empImg['image']= img
         self.empImg.image= img

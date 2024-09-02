@@ -101,7 +101,7 @@ def update(cursor, tableName, values, conditions):
 def create():
     "Creating the database in db directory using a data dictionnary"
     if os.path.isdir('db'): # If the db is in path
-        conn= sql.connect('''db\management.db''')
+        conn= sql.connect('''db/management.db''')
         cur= conn.cursor()
         # CREATING THE TABLES
         # Company table(uName (username),
@@ -221,10 +221,10 @@ def connect():
             create()    # Recreate the database
             #print('Database created')
             # Reconnection after table creation
-            con= sql.connect('''db\management.db''')
+            con= sql.connect('''db/management.db''')
             cur= con.cursor()
             
-            app_state.create(db= '''db\management.db''', appstate= 1)   # Reset the database path in the app_state module
+            app_state.create(db= '''db/management.db''', appstate= 1)   # Reset the database path in the app_state module
         except:
             ...
     return con, cur # Return the connection and the cursor
